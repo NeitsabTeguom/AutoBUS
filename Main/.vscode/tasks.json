@@ -6,9 +6,9 @@
       {
         "label": "Debug Compile",
         "type": "shell",
-        "command": "${workspaceRoot}/bin/debug.sh",
+        "command": "${workspaceRoot}/debug.sh",
         "windows": {
-          "command": "${workspaceRoot}\\bin\\debug.cmd"
+          "command": "${workspaceRoot}\\debug.cmd"
         },
         "group": "test",
         "presentation": {
@@ -19,9 +19,9 @@
       {
         "label": "Release Compile",
         "type": "shell",
-        "command": "${workspaceRoot}/bin/release.sh",
+        "command": "${workspaceRoot}/release.sh",
         "windows": {
-          "command": "${workspaceRoot}\\bin\\release.cmd"
+          "command": "${workspaceRoot}\\release.cmd"
         },
         "group": "test",
         "presentation": {
@@ -32,7 +32,7 @@
       {
         "label": "build",
         "type": "shell",
-        "command": "${workspaceRoot}/bin/release.sh",
+        "command": "${workspaceRoot}/release.sh",
         "group": "build"
     }
     ]

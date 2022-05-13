@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ## PARAMS
-
-valacOptions=${valacOptions:-}
+appName=${appName:-''}
+valacOptions=${valacOptions:-''}
 output=${output:-Release}
 
 while [ $# -gt 0 ]; do
@@ -24,6 +24,6 @@ valaFiles=`find . -type f ! -path './bin/*' -name '*.vala'  | tr '\n' ' '`
 
 rm -rf ./bin/$output/
 
-valac $valacOptions $valaFiles -d ./bin/$output/ -o AutoBUS
+valac $valacOptions $valaFiles -d ./bin/$output/ -o $appName
 
-chmod +x ./bin/$output/AutoBUS
+chmod +x ./bin/$output/$appName
