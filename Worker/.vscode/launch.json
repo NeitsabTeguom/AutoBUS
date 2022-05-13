@@ -8,7 +8,7 @@
             "name": "Debug",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/Debug/AutoBUS",
+            "program": "${workspaceRoot}/bin/Debug/AutoBUS.Worker",
             "cwd": "${workspaceRoot}",
             "preLaunchTask": "Debug Compile"
         }
