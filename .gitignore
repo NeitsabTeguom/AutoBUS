@@ -1,6 +1,6 @@
 # Build results
-bin/[Dd]ebug/
-bin/[Rr]elease/
+[Dd]ebug/
+[Rr]elease/
 
 # Package
 package/
