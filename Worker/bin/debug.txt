@@ -1,0 +1,26 @@
+From my experience, you can try VS Code + CodeLLDB plugin, which generally works well for me.
+The steps are as follows:
+
+1 Add --debug option to valac.
+    This can be done with "add_project_arguments" in meson.build
+
+2 Generate a launch.json for LLDB.
+    This can be done with "create a launch.json file" in "Run and Debug" of VS Code.
+    Create launch.json : https://i.stack.imgur.com/E8F5C.png
+
+3 It will create a .vscode directory and a launch.json file inside it.
+    Ensure that you have installed CodeLLDB plugin. Modity the "configurations" in the launch.json, such that "configurations" in the file becomes (<my program> needs to be changed to your executable file name)
+
+    "configurations": [
+            {
+                "name": "Launch",
+                "type": "lldb",
+                "request": "launch",
+                "program": "${workspaceFolder}/<my program>",
+                "args": ["-arg1", "-arg2"],
+            }
+        ]
+
+4 Then you can set breakpoints and start debugging in VS Code.
+    Debugging in VS Code : https://i.stack.imgur.com/sTUOM.png
+

@@ -1,0 +1,39 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Debug Compile",
+        "type": "shell",
+        "command": "${workspaceRoot}/bin/debug.sh",
+        "windows": {
+          "command": "${workspaceRoot}\\bin\\debug.cmd"
+        },
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      },
+      {
+        "label": "Release Compile",
+        "type": "shell",
+        "command": "${workspaceRoot}/bin/release.sh",
+        "windows": {
+          "command": "${workspaceRoot}\\bin\\release.cmd"
+        },
+        "group": "test",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        }
+      },
+      {
+        "label": "build",
+        "type": "shell",
+        "command": "${workspaceRoot}/bin/release.sh",
+        "group": "build"
+    }
+    ]
+  }
