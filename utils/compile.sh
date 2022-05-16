@@ -3,6 +3,7 @@
 ## PARAMS
 appName=${appName:-''}
 valacOptions=${valacOptions:-''}
+pkg=${pkg:-''}
 output=${output:-Release}
 
 while [ $# -gt 0 ]; do
@@ -16,6 +17,11 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+if [ -n "$pkg" ]
+then
+      pkg="--pkg ${pkg}"
+fi
+
 ## SEARCH FILES
 
 valaFiles=`find . -type f ! -path './bin/*' -name '*.vala'  | tr '\n' ' '`
@@ -24,6 +30,6 @@ valaFiles=`find . -type f ! -path './bin/*' -name '*.vala'  | tr '\n' ' '`
 
 rm -rf ./bin/$output/
 
-valac $valacOptions $valaFiles -d ./bin/$output/ -o $appName
+valac $valacOptions $pkg $valaFiles -d ./bin/$output/ -o $appName
 
 chmod +x ./bin/$output/$appName
