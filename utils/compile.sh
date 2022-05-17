@@ -25,11 +25,13 @@ fi
 ## SEARCH FILES
 
 valaFiles=`find . -type f ! -path './bin/*' -name '*.vala'  | tr '\n' ' '`
+valaCommonFiles=`find ../Common -type f -name '*.vala'  | tr '\n' ' '`
 
 ## COMPILE
 
 rm -rf ./bin/$output/
 
-valac $valacOptions $pkg $valaFiles -d ./bin/$output/ -o $appName
+echo valac $valacOptions $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
+valac $valacOptions $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
 
 chmod +x ./bin/$output/$appName

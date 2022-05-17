@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "Worker"
+		},
+		{
+			"path": "Common"
+		},
+		{
+			"path": "utils"
+		}
+	],
+	"settings": {}
+}
