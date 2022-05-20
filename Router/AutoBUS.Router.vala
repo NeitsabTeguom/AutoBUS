@@ -1,6 +1,10 @@
+using AutoBUS.Sockets;
+using AutoBUS.AppIO;
+
 public static int main () {
-        Sockets.SocketServer ss = Sockets.SocketServer.Instance;
-        AppIO.FileWatcher fw = AppIO.FileWatcher.Instance;
+        SocketServer ss = SocketServer.Instance;
+        FileWatcher fw = FileWatcher.Instance;
+        (new AutoBUS.AppIO.TmpFs()).Mount(100 * 1024 * 1024);
         new MainLoop ().run ();
         return 0;
 }
