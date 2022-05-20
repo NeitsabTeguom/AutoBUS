@@ -1,4 +1,4 @@
-namespace Sockets
+namespace AutoBUS.Sockets
 {
     class SocketServer
     {

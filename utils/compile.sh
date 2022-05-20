@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# https://valadoc.org/
+
 ## PARAMS
 appName=${appName:-''}
 valacOptions=${valacOptions:-''}
