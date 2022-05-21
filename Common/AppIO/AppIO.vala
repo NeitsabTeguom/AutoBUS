@@ -111,6 +111,7 @@ namespace AutoBUS
             */
             public void Mount(uint MemorySize)
             {
+                print ("Mount "+this.MountPoint+"\n");
                 #if WINDOWS
                     message ("Running on Windows");
                 #elif OSX
@@ -133,6 +134,7 @@ namespace AutoBUS
             */
             public void Unmount()
             {
+                print ("Unmount "+this.MountPoint+"\n");
                 #if WINDOWS
                     message ("Running on Windows");
                 #elif OSX

@@ -1,41 +1,47 @@
+using GLib;
 using AutoBUS;
 
-public class AutoBUSApp : Application {
-        private AppIO aio;
+namespace Main {
 
-	private AutoBUSApp () {
-		Object (application_id: "org.autobus.router", flags: ApplicationFlags.FLAGS_NONE);
-		//set_inactivity_timeout (10000);
-	}
+        private static MainLoop mainloop;
 
-        protected override void activate () {
-                base.activate ();
-		print ("Activated\n");
+        private static AppIO aio;
+
+        private static void on_start () {
+		print ("Starting\n");
+
                 Sockets.SocketServer ss = Sockets.SocketServer.Instance;
-                this.aio = AppIO.Instance;
+                aio = AppIO.Instance;
 	}
 
-        protected override void shutdown () {
-                base.shutdown ();
-		print ("Shutdown \n");
-                this.aio.Dispose();
-	}
+        private static void on_exit (int signum) {
+                print("Exiting\n");
+        
+                aio.Dispose();
+                aio = null;
+        
+                mainloop.quit ();
+        }
 
-	static int main (string[] args) {
-		AutoBUSApp app = new AutoBUSApp ();
-		int status = app.run (args);
-		return status;
+        public static int main (string[] args) {
+
+                // set timezone to avoid that strftime stats /etc/localtime on every call
+                Environment.set_variable ("TZ", "/etc/localtime", false);
+
+                Process.signal(ProcessSignal.INT, on_exit);
+                Process.signal(ProcessSignal.TERM, on_exit);
+
+                // Creating a GLib main loop with a default context
+                mainloop = new MainLoop (null, false);
+
+                on_start();
+                
+                // Start GLib mainloop
+                mainloop.run ();
+
+                return 0;        
 	}
 }
-
-/*
-public static int main () {
-        Sockets.SocketServer ss = Sockets.SocketServer.Instance;
-        AppIO aio = AppIO.Instance;
-        new MainLoop ().run ();
-        AppIO.Instance.Dispose();
-        return 0;
-}
-*/
+//https://gitlab.gnome.org/Archive/gnome-dvb-daemon/-/blob/master/src/Main.vala
 //https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers
 // echo "blub" | nc localhost 3333 
