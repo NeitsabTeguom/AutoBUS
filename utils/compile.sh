@@ -19,10 +19,10 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-if [ -n "$pkg" ]
-then
-      pkg="--pkg ${pkg}"
-fi
+#if [ -n "$pkg" ]
+#then
+#      pkg="--pkg ${pkg}"
+#fi
 
 ## SEARCH FILES
 
