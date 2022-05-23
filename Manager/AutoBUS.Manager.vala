@@ -1,17 +1,24 @@
+using Gee;
+
 public class HTTPServer {
+    private string? staticPath;
 
-    private string staticPath;
-
-    int port;
-    Soup.Server server;
+    private int port;
+    private Soup.Server server;
+    
+    private FSCache fsc;
 
     public HTTPServer(int port = 0) {
         this.port = port;
         #if DEBUG
-            staticPath="static/";
+            this.staticPath="static/";
         #else
-            staticPath="static/";
+            this.staticPath="static/";
         #endif
+        print(this.staticPath+"\n");
+
+        this.fsc = new FSCache(this.staticPath);
+        
         this.server = new Soup.Server(Soup.SERVER_PORT, port, null);
         server.add_handler(null, handle_static_file);
     }
@@ -62,6 +69,62 @@ public class HTTPServer {
         server.run_async();
         stdout.printf("Starting HTTP server on http://localhost:%u\n",
             server.port);
+    }
+
+    private class FSCache
+    {
+        private string path;
+
+        private class Cache
+        {
+            FileInfo fi {get;private set;}
+            File f {get;private set;}
+            public Cache(FileInfo fi,
+                File f)
+            {
+                this.fi = fi;
+                this.f = f;
+            }
+        }
+
+        private HashMap<string, Cache> files = new HashMap<string, Cache>();
+
+        public FSCache(string path) {
+            this.path=path;
+            this.getAllFiles(this.path);
+        }
+
+        private void getAllFiles(string path)
+        {
+            try {
+                GLib.Dir dir = GLib.Dir.open(path);
+                if (dir == null)
+                    return;
+
+                for (weak string entry = dir.read_name(); entry != null ; entry = dir.read_name()) {
+                    string _path = path + entry;
+
+                    bool is_dir = GLib.FileUtils.test(_path, GLib.FileTest.IS_DIR);
+                    if (is_dir == true) {
+
+                        print(_path+"\n");
+                        this.getAllFiles(_path+"/");
+                    } else {
+                        this.setFile(_path);
+                    }
+                }
+            } catch (Error e) {
+                stderr.printf ("Error: %s\n", e.message);
+            }
+        }
+
+        private void setFile(string _path)
+        {
+            print(_path+"\n");
+            var f = File.new_for_path(_path);
+            var fi = f.query_info("*", FileQueryInfoFlags.NONE);
+            this.files.set(_path, new Cache(fi,f));
+        }
     }
 }
 
