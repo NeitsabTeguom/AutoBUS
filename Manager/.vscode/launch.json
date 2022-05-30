@@ -5,7 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug",
+            "name": "Debug - gdb launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/Debug/AutoBUS.Manager",
+            "args": ["--update"],
+            "stopAtEntry": false,
+            "miDebuggerPath": "/usr/bin/gdb",
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Debug Compile"
+        },
+        {
+            "name": "Debug - lldb launch",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceRoot}/bin/Debug/AutoBUS.Manager",

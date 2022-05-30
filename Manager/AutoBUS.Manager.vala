@@ -1,17 +1,22 @@
+using Gee;
+
 public class HTTPServer {
 
-    private string staticPath;
+    private int port;
+    private Soup.Server server;
 
-    int port;
-    Soup.Server server;
+    #if DEBUG
+        private const string staticPath = "static/";
+    #else
+        private const string staticPath = "static/";
+    #endif
+    private const string privateDir = "private/";
+    private string privatePath { get { return this.staticPath + this.privateDir; } }
+    private string privateWeb { get { return "/" + this.privateDir; } }
 
     public HTTPServer(int port = 0) {
         this.port = port;
-        #if DEBUG
-            staticPath="static/";
-        #else
-            staticPath="static/";
-        #endif
+
         this.server = new Soup.Server(Soup.SERVER_PORT, port, null);
         server.add_handler(null, handle_static_file);
     }
@@ -29,8 +34,14 @@ public class HTTPServer {
         if (path == "/" || path == "") {
             path = "index.html";
         }
+        //print(path+"\n");
 
-        var file = File.new_for_path(staticPath + path);
+        var file = File.new_for_path(this.staticPath + path);
+
+        if(path.substring(0,this.privateWeb.length) == this.privateWeb)
+        {
+            print("Private space\n");
+        }
 
         try {
             var info = yield file.query_info_async("*", FileQueryInfoFlags.NONE);
