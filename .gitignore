@@ -5,3 +5,6 @@
 # Package
 package/
 AutoBUS.zip
+
+# Plugins
+Manager/static/adminlte/
