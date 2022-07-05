@@ -1,45 +1,56 @@
-class AsyncDemo {
+using GLib;
 
-    private MainLoop loop;
+namespace AutoBUS.Worker {
 
-    public AsyncDemo (MainLoop loop) {
-        this.loop = loop;
+    private static MainLoop mainloop;
+
+    private static Client client;
+
+    private static void on_start ()
+    {
+        print ("Starting\n");
+            
+        client = Client.Instance;
     }
 
-    public async void http_request () throws Error {
-        try {
-            var resolver = Resolver.get_default ();
-            var addresses = yield resolver.lookup_by_name_async ("www.google.com");
-            var address = addresses.nth_data (0);
-            print ("(async) resolved www.google.com to %s\n", address.to_string ());
+    private static void on_exit (int signum)
+    {
+        print("Exiting\n");
 
-            var socket_address = new InetSocketAddress (address, 80);
-            var client = new SocketClient ();
-            var conn = yield client.connect_async (socket_address);
-            print ("(async) connected to www.google.com\n");
+        stop();
 
-            var message = "GET / HTTP/1.1\r\nHost: www.google.com\r\n\r\n";
-            yield conn.output_stream.write_async (message.data, Priority.DEFAULT);
-            print ("(async) wrote request\n");
+        mainloop.quit ();
+    }
 
-            // we set the socket back to blocking here for the convenience
-            // of DataInputStream
-            conn.socket.set_blocking (true);
+    private static void stop()
+    {
 
-            var input = new DataInputStream (conn.input_stream);
-            message = input.read_line (null).strip ();
-            print ("(async) received status line: %s\n", message);
-        } catch (Error e) {
-            stderr.printf ("%s\n", e.message);
-        }
+        client.Dispose();
+        client = null;
 
-        this.loop.quit ();
+    }
+
+    public static int main (string[] args)
+    {
+        // set timezone to avoid that strftime stats /etc/localtime on every call
+        Environment.set_variable ("TZ", "/etc/localtime", false);
+
+        Process.signal(ProcessSignal.INT, on_exit);
+        Process.signal(ProcessSignal.TERM, on_exit);
+
+        // Creating a GLib main loop with a default context
+        mainloop = new MainLoop (null, false);
+
+        on_start();
+        
+        // Start GLib mainloop
+        mainloop.run ();
+
+        stop();
+
+        return 0;        
     }
 }
-
-void main () {
-    var loop = new MainLoop ();
-    var demo = new AsyncDemo (loop);
-    demo.http_request.begin ();
-    loop.run ();
-}
+//https://gitlab.gnome.org/Archive/gnome-dvb-daemon/-/blob/master/src/Main.vala
+//https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers
+// echo "blub" | nc localhost 3333 
