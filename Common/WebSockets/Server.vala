@@ -39,11 +39,11 @@ namespace AutoBUS
 
         public void Init()
         {
-            this.listen_local (AutoBUS.Config.router.server.Port, 0);
+            this.listen_local (AutoBUS.Config.Router.Server.Port, 0);
 
-            info (AutoBUS.Config.router.server.Port.to_string());
+            stdout.printf(AutoBUS.Config.Router.Server.Host);
             string[] protocols = {"autobus"};
-            this.add_websocket_handler("/autobus/router",AutoBUS.Config.router.server.Host, protocols, ws_callback);
+            this.add_websocket_handler("/autobus/router",AutoBUS.Config.Router.Server.Host, protocols, ws_callback);
         }
     
         private void ws_callback(Soup.Server server, Soup.WebsocketConnection websocket, string path, Soup.ClientContext client)
@@ -68,7 +68,7 @@ namespace AutoBUS
 
         private void ws_closed()
         {
-            stdout.printf("WebSock closed!"); // я просто вывел сообщение
+            stdout.printf("WebSock closed!");
         }
 
         private void ws_error(Error error)

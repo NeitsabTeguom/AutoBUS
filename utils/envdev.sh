@@ -10,6 +10,7 @@ sudo apt install valac
 
 sudo apt-get install libsoup2.4
 sudo apt-get install libgee-0.8.dev
+sudo apt-get install libjson-glib-dev
 
 # VSCode
 

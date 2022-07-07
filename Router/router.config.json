@@ -1,0 +1,7 @@
+{
+    "Server":
+    {
+        "Host":"localhost",
+        "Port":8888
+    }
+}

@@ -42,7 +42,7 @@ namespace AutoBUS
         {
             this.session = new Soup.Session();
             
-            this.message = new Soup.Message("GET", AutoBUS.Config.worker.client.URL); // "http://<server_host>[:server_port]/[path]"
+            this.message = new Soup.Message("GET", AutoBUS.Config.Worker.Client.URL); // "http://<server_host>[:server_port]/[path]"
 
             string[] protocols = {"autobus"};
             this.session.websocket_connect_async.begin(this.message, "worker", protocols, null, (obj, res) => {
