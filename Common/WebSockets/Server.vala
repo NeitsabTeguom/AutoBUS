@@ -41,7 +41,6 @@ namespace AutoBUS
         {
             this.listen_local (AutoBUS.Config.Router.Server.Port, 0);
 
-            stdout.printf(AutoBUS.Config.Router.Server.Host);
             string[] protocols = {"autobus"};
             this.add_websocket_handler("/autobus/router",AutoBUS.Config.Router.Server.Host, protocols, ws_callback);
         }

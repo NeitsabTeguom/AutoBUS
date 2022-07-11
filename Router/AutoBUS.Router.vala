@@ -7,13 +7,28 @@ namespace AutoBUS.Router {
         private static AppIO aio;
         private static Server server;
 
+        private static ILogging logging;
+
         private static void on_start ()
         {
                 print ("Starting\n");
                 
+                var registrar = new PluginRegistrar<ILogging> ("logging");
+                if(registrar.load ())
+                {
+                        logging = registrar.new_object ();
+                
+                        Log.set_default_handler(LogFunc);
+                }
+
                 server = Server.Instance;
 
                 aio = AppIO.Instance;
+        }
+
+        private static void LogFunc (string? log_domain, LogLevelFlags log_levels, string message)
+        {
+                logging.Log (log_domain, log_levels, message);
         }
 
         private static void on_exit (int signum)

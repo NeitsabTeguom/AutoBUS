@@ -46,7 +46,7 @@ namespace AutoBUS
 
             string[] protocols = {"autobus"};
             this.session.websocket_connect_async.begin(this.message, "worker", protocols, null, (obj, res) => {
-                //this.websocket = this.session.websocket_connect_async.end(res);
+                this.websocket = this.session.websocket_connect_async.end(res);
                 this.websocket.message.connect(this.ws_message);
                 this.websocket.closed.connect(this.ws_closed);
                 this.websocket.error.connect(this.ws_error);

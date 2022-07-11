@@ -6,11 +6,26 @@ namespace AutoBUS.Worker {
 
     private static Client client;
 
+    private static ILogging logging;
+
     private static void on_start ()
     {
         print ("Starting\n");
+                
+        var registrar = new PluginRegistrar<ILogging> ("logging");
+        if(registrar.load ())
+        {
+                logging = registrar.new_object ();
+        
+                Log.set_default_handler(LogFunc);
+        }
             
         client = Client.Instance;
+    }
+
+    private static void LogFunc (string? log_domain, LogLevelFlags log_levels, string message)
+    {
+            logging.Log (log_domain, log_levels, message);
     }
 
     private static void on_exit (int signum)
