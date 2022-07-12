@@ -28,16 +28,19 @@ echo Build Package : Router
 Router=$package/Router
 mkdir -p $Router/bin/
 cp -r ./Router/bin/Release/* $Router/bin/
+cp ./Router/bin/Release/router.config.json $Router/bin/
 
 echo Build Package : Worker
 Worker=$package/Worker
 mkdir -p $Worker/bin/
 cp -r ./Worker/bin/Release/* $Worker/bin/
+cp ./Worker/bin/Release/worker.config.json $Worker/bin/
 
 echo Build Package : Manager
 Manage=$package/Manager
 mkdir -p  $Manage/bin/
 cp -r ./Manager/bin/Release/* $Manage/bin/
+cp ./Manager/bin/Release/manager.config.json $Manager/bin/
 
 # Copy Installer
 

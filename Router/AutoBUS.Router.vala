@@ -1,30 +1,57 @@
 using GLib;
-using AutoBUS;
 
-namespace Main {
+namespace AutoBUS.Router {
 
         private static MainLoop mainloop;
 
         private static AppIO aio;
+        private static Server server;
 
-        private static void on_start () {
-		print ("Starting\n");
+        private static ILogging logging;
 
-                Sockets.SocketServer ss = Sockets.SocketServer.Instance;
+        private static void on_start ()
+        {
+                print ("Starting\n");
+                
+                var registrar = new PluginRegistrar<ILogging> ("logging");
+                if(registrar.load ())
+                {
+                        logging = registrar.new_object ();
+                
+                        Log.set_default_handler(LogFunc);
+                }
+
+                server = Server.Instance;
+
                 aio = AppIO.Instance;
-	}
+        }
 
-        private static void on_exit (int signum) {
+        private static void LogFunc (string? log_domain, LogLevelFlags log_levels, string message)
+        {
+                logging.Log (log_domain, log_levels, message);
+        }
+
+        private static void on_exit (int signum)
+        {
                 print("Exiting\n");
-        
-                aio.Dispose();
-                aio = null;
-        
+
+                stop();
+
                 mainloop.quit ();
         }
 
-        public static int main (string[] args) {
+        private static void stop()
+        {
+                aio.Dispose();
+                aio = null;
 
+                server.Dispose();
+                server = null;
+
+        }
+
+        public static int main (string[] args)
+        {
                 // set timezone to avoid that strftime stats /etc/localtime on every call
                 Environment.set_variable ("TZ", "/etc/localtime", false);
 
@@ -39,8 +66,10 @@ namespace Main {
                 // Start GLib mainloop
                 mainloop.run ();
 
+                stop();
+
                 return 0;        
-	}
+        }
 }
 //https://gitlab.gnome.org/Archive/gnome-dvb-daemon/-/blob/master/src/Main.vala
 //https://wiki.gnome.org/Projects/Vala/ValaForCSharpProgrammers
