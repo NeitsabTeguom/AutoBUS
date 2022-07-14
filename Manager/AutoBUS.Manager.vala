@@ -95,7 +95,7 @@ static int main(string[] args) {
 
         loop = new MainLoop();
         Posix.signal(Posix.SIGINT, safe_exit);
-        Posix.signal(Posix.SIGHUP, safe_exit);
+        //Posix.signal(Posix.SIGHUP, safe_exit);
         Posix.signal(Posix.SIGTERM, safe_exit);
         loop.run();
     } catch (Error e) {

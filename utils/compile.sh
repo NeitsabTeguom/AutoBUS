@@ -1,12 +1,30 @@
 #!/bin/bash
 
+mypath=`dirname $(realpath $0)`
+
+unameOut=$(uname -a)
+case "${unameOut}" in
+	*Microsoft*)	OSType="WSL";; #must be first since Windows subsystem for linux will have Linux in the name too
+	*microsoft*)	OSType="WSL2";;
+	Linux*)	OSType="LINUX";;
+	FreeBSD*)	OSType="UNIX";;
+	Darwin*)	OSType="OSX";;
+	CYGWIN*)	OSType="WINDOWS";;
+	MINGW*)	OSType="WINDOWS";;
+	*Msys)	OSType="WINDOWS";;
+	*)	OSType="UNKNOWN:${unameOut}"
+esac
+
+# POSIX (other)
+
+echo OS ----------------------------------------------
+echo "$OSType"
+echo -------------------------------------------------
+
 # https://valadoc.org/
 
 ## PARAMS
 appName=${appName:-''}
-valacOptions=${valacOptions:-''}
-pkg=${pkg:-''}
-output=${output:-Release}
 
 while [ $# -gt 0 ]; do
 
@@ -19,21 +37,56 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-#if [ -n "$pkg" ]
-#then
-#      pkg="--pkg ${pkg}"
-#fi
+## CLEANING
+
+rm -rf ./bin/$output/
+
+## PACKAGES
+
+if [ -f ./pkg ]; then
+	pkg=`cat pkg`
+fi
 
 ## SEARCH FILES
 
 valaFiles=`find . -type f ! -path './bin/*' -name '*.vala'  | tr '\n' ' '`
 valaCommonFiles=`find ../Common -type f -name '*.vala'  | tr '\n' ' '`
 
+## RELEASE / DEBUG
+
+if [ -n "$debug" ]; then
+	valacOptions="--debug -D DEBUG $valacOptions"
+	output="Debug"
+else
+	output="Release"
+fi
+
+## APPNAME
+
+if [ "$OSType"="WINDOWS" ]; then
+	 appName="$appName.exe"
+fi
+
+## PLUGINS
+
+mkdir -p ./bin/$output/internal/
+if [[ ! -f ./bin/$output/internal/liblogging.so ]]
+then
+	valac --pkg gmodule-2.0 -d ./bin/$output/internal/ -o liblogging.so --library logging -X -fPIC -X -shared ../internal/logging/logging.vala ../Common/Plugins/Interfaces/ILogging.vala
+	rm -rf ./bin/$output/internal/*.vapi
+fi
+
 ## COMPILE
 
-rm -rf ./bin/$output/
-
-echo valac $valacOptions $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
-valac $valacOptions $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
+echo valac $valacOptions -D $OSType $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
+valac $valacOptions -D $OSType $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
 
 chmod +x ./bin/$output/$appName
+
+## COPY DEPENDENCIES
+
+if [ -z ${debug+xxx} ]; then
+	if [ "$OSType"="WINDOWS" ]; then
+		ldd ./bin/$output/$appName | grep mingw | sort -u | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp -v '{}' ./bin/$output/
+	fi
+fi
