@@ -39,7 +39,7 @@ done
 
 ## CLEANING
 
-rm -rf ./bin/$output/
+rm -f ./bin/$output/*
 
 ## PACKAGES
 

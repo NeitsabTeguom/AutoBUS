@@ -29,20 +29,20 @@ cd $mypath
 echo Build Package : Router
 Router=$package/Router
 mkdir -p $Router/bin/
+cp ./Router/router.config.json ./Router/bin/Release/
 cp -r ./Router/bin/Release/* $Router/bin/
-cp ./Router/router.config.json $Router/bin/
 
 echo Build Package : Worker
 Worker=$package/Worker
 mkdir -p $Worker/bin/
+cp ./Worker/worker.config.json ./Worker/bin/Release/
 cp -r ./Worker/bin/Release/* $Worker/bin/
-cp ./Worker/worker.config.json $Worker/bin/
 
 echo Build Package : Manager
-Manage=$package/Manager
-mkdir -p  $Manage/bin/
-cp -r ./Manager/bin/Release/* $Manage/bin/
-cp ./Manager/manager.config.json $Manager/bin/
+Manager=$package/Manager
+mkdir -p  $Manager/bin/
+cp ./Manager/manager.config.json ./Manager/bin/Release/
+cp -r ./Manager/bin/Release/* $Manager/bin/
 
 # Copy Installer
 
@@ -57,9 +57,9 @@ cp $mypath/utils/Installer/AutoBUS.appname.service $Worker/AutoBUS.Worker.servic
 sed -i -e 's/appname/Worker/g' $Worker/*.*
 
 echo Copy Installer : Manager
-cp $mypath/utils/Installer/*.sh $Manage
-cp $mypath/utils/Installer/AutoBUS.appname.service $Manage/AutoBUS.Manager.service
-sed -i -e 's/appname/Manager/g' $Manage/*.*
+cp $mypath/utils/Installer/*.sh $Manager
+cp $mypath/utils/Installer/AutoBUS.appname.service $Manager/AutoBUS.Manager.service
+sed -i -e 's/appname/Manager/g' $Manager/*.*
 
 # Compress
 
