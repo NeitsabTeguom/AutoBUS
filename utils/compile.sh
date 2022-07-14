@@ -37,6 +37,21 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+## RELEASE / DEBUG
+
+if [ -n "$debug" ]; then
+	valacOptions="--debug -D DEBUG $valacOptions"
+	output="Debug"
+else
+	output="Release"
+fi
+
+## APPNAME
+
+if [[ $OSType == "WINDOWS" ]]; then
+	 appName="$appName.exe"
+fi
+
 ## CLEANING
 
 rm -f ./bin/$output/*
@@ -52,20 +67,6 @@ fi
 valaFiles=`find . -type f ! -path './bin/*' -name '*.vala'  | tr '\n' ' '`
 valaCommonFiles=`find ../Common -type f -name '*.vala'  | tr '\n' ' '`
 
-## RELEASE / DEBUG
-
-if [ -n "$debug" ]; then
-	valacOptions="--debug -D DEBUG $valacOptions"
-	output="Debug"
-else
-	output="Release"
-fi
-
-## APPNAME
-
-if [ "$OSType"="WINDOWS" ]; then
-	 appName="$appName.exe"
-fi
 
 ## PLUGINS
 
