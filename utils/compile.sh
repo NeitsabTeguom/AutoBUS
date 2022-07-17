@@ -73,14 +73,15 @@ valaCommonFiles=`find ../Common -type f -name '*.vala'  | tr '\n' ' '`
 mkdir -p ./bin/$output/internal/
 if [[ ! -f ./bin/$output/internal/liblogging.so ]]
 then
-	valac --pkg gmodule-2.0 -d ./bin/$output/internal/ -o liblogging.so --library logging -X -fPIC -X -shared ../internal/logging/logging.vala ../Common/Plugins/Interfaces/ILogging.vala
+	echo valac -X -w --pkg gmodule-2.0 -d ./bin/$output/internal/ -o liblogging.so --library logging -X -fPIC -X -shared ../internal/logging/logging.vala ../Common/Plugins/Interfaces/ILogging.vala
+	valac -X -w --pkg gmodule-2.0 -d ./bin/$output/internal/ -o liblogging.so --library logging -X -fPIC -X -shared ../internal/logging/logging.vala ../Common/Plugins/Interfaces/ILogging.vala
 	rm -rf ./bin/$output/internal/*.vapi
 fi
 
 ## COMPILE
 
-echo valac $valacOptions -D $OSType $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
-valac $valacOptions -D $OSType $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
+echo valac -X -w $valacOptions -D $OSType $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
+valac -X -w $valacOptions -D $OSType $pkg $valaFiles $valaCommonFiles -d ./bin/$output/ -o $appName
 
 chmod +x ./bin/$output/$appName
 
